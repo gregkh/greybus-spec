@@ -176,16 +176,18 @@ descriptor as described in Table :num:`table-interface-descriptor`.
     :alt: Interface Descriptor
     :spec: l l c c l
 
-    =======  =================  ======  ==========  ==================================
-    Offset   Field              Size    Value       Description
-    =======  =================  ======  ==========  ==================================
-    0        size               2       0x0008      Size of this descriptor
-    2        type               1       0x01        Type of the descriptor (Interface)
-    3        features           1       Bit Mask    :ref:`interface-feature-bits`
-    4        vendor_string_id   1       ID          String ID for the vendor name
-    5        product_string_id  1       ID          String ID for the product name
-    6        (pad)              2       0           Reserved (pad to 4 byte boundlary)
-    =======  =================  ======  ==========  ==================================
+    =======  =================  ======  ===========  ==================================
+    Offset   Field              Size    Value        Description
+    =======  =================  ======  ===========  ==================================
+    0        size               2       0x0008       Size of this descriptor
+    2        type               1       0x01         Type of the descriptor (Interface)
+    3        (pad)              1       0            Reserved (pad to 4 byte boundary)
+    4        features           2       Bit Mask     :ref:`interface-feature-bits`
+    6        module_size        1       Module Size  :ref:`module-size`
+    7        vendor_string_id   1       ID           String ID for the vendor name
+    8        product_string_id  1       ID           String ID for the product name
+    9        (pad)              3       0            Reserved (pad to 4 byte boundary)
+    =======  =================  ======  ===========  ==================================
 
 *vendor_string_id* is a reference to a specific string descriptor ID
 that provides a description of the vendor who created the Module.  If
@@ -197,6 +199,30 @@ more details.
 that provides a description of the product.  If there is no string
 present for this value in the Manifest, this value shall be 0x00.
 See the :ref:`string-descriptor` section below for more details.
+
+.. _module-size:
+
+Greybus Interface Module Size
+"""""""""""""""""""""""""""""
+
+Table :num:`table-module-size` defines the values which specify what the
+physical module size this interface resides within.
+
+.. figtable::
+    :nofig:
+    :label: table-module-size
+    :caption: Module Size values
+    :spec: l l l
+
+    ============= ================================ ==========
+    Symbol        Description                      Value
+    ============= ================================ ==========
+    GB_MODULE_1x2 The Interface is in a 1x2 module 0x00
+    GB_MODULE_2x2 The Interface is in a 2x2 module 0x01
+    GB_MODULE_2x3 The Interface is in a 2x3 module 0x02
+    GB_MODULE_2x4 The Interface is in a 2x4 module 0x03
+    |_|           (All other values are reserved)  0x04..0xff
+    ============= ================================ ==========
 
 .. _interface-feature-bits:
 
@@ -212,12 +238,13 @@ set of features supported by an Interface.
     :caption: Interface Descriptor Feature Bits
     :spec: l l l
 
-    ====================== ================================================== ==========
-    Symbol                 Descirption                                        Value
-    ====================== ================================================== ==========
-    GB_INTERFACE_TIME_SYNC The Interface supports Greybus TimeSync Operations 0x01
-    |_|                    (All other values are reserved)                    0x02..0x80
-    ====================== ================================================== ==========
+    ====================== ====================================================== ==============
+    Symbol                 Descirption                                            Value
+    ====================== ====================================================== ==============
+    GB_INTERFACE_LOCK      The Interface controls a lock mechanism for the module 0x0001
+    GB_INTERFACE_TIME_SYNC The Interface supports Greybus TimeSync Operations     0x0002
+    |_|                    (All other values are reserved)                        0x0004..0x8000
+    ====================== ====================================================== ==============
 
 .. _string-descriptor:
 
